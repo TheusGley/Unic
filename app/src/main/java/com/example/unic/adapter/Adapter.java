@@ -14,7 +14,7 @@ import com.example.unic.model.Aulas;
 import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.MyviewHolder> {
-    private List<Aulas> listaAulas;
+    public static List<Aulas> listaAulas;
     public Adapter(List<Aulas> lista ) {
         this.listaAulas = lista;
 
@@ -40,7 +40,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyviewHolder> {
         holder.sala.setText(aulas.getSala());
         holder.data.setText(aulas.getData());
 
+
+
     }
+
 
     @Override
     //exibe a quantidade de item em listas
