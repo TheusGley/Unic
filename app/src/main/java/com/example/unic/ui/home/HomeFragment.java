@@ -1,13 +1,16 @@
 package com.example.unic.ui.home;
 
+import com.example.unic.adapter.AdapterAula;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,31 +24,32 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.unic.ClickListener;
 import com.example.unic.R;
 import com.example.unic.activity.Tela_aula;
-import com.example.unic.activity.Tela_principal;
-import com.example.unic.adapter.Adapter;
+import com.example.unic.adapter.AdapterAula;
 import com.example.unic.databinding.FragmentHomeBinding;
 import com.example.unic.model.Aulas;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    private TextView nomeUsuario, senhaUsuario;
-    private Button bt_deslogar, check;
-    private Calendar calendar;
-    private int anoH, mesH, diaH;
+
+
     private String[] mensagens = {"Esta aula ainda nao começou",};
 
 
-    private Date diaAula;
-    private List<Aulas> dataList;
+
+    private String  idDocumento;
+
+
     private RecyclerView recyclerView;
     public static List<Aulas> aulasList = new ArrayList<>();
 
     private FragmentHomeBinding binding;
+
+    public HomeFragment() {
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -56,6 +60,15 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         recyclerView = root.findViewById(R.id.recyclerView);
+
+        AdapterAula adapter = new AdapterAula(aulasList);
+
+        DataSource dataSource = new DataSource();
+
+        // Chamar o método para buscar dados e atualizar a lista
+        dataSource.fetchDataAndUpdateList(adapter);
+
+
         //evento de click.
         recyclerView.addOnItemTouchListener(
                 new ClickListener(
@@ -68,7 +81,7 @@ public class HomeFragment extends Fragment {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Tela_aula(position);
+                                        Tela_aula(idDocumento,position);
 
                                     }
                                 }, 1000);
@@ -90,10 +103,9 @@ public class HomeFragment extends Fragment {
         );
 
         //Listagem de Aulas
-        this.criarAulas();
+//        this.ListarAulas();
 
         //configurar adapter
-        Adapter adapter = new Adapter(aulasList);
 
 
         //configurar recycler view
@@ -105,27 +117,57 @@ public class HomeFragment extends Fragment {
 
         return root;
     }
-    public void criarAulas() {
-        Aulas aulas = new Aulas("Desenvolvimento mobile", "12/09/23", "20:00", "bloco c 102");
-        this.aulasList.add(aulas);
+    public class DataSource {
 
-        aulas = new Aulas("Projeto Integrado ", "13/09/23", "20:00", "bloco c 102");
-        this.aulasList.add(aulas);
+        private static final String TAG = "DataSource";
 
-        aulas = new Aulas("Computação em nuvem", "14/09/23", "20:00", "bloco a 104");
-        this.aulasList.add(aulas);
+        private FirebaseFirestore db = FirebaseFirestore.getInstance();
+        private CollectionReference aulasCollection = db.collection("Aulas");
 
-        aulas = new Aulas("Projeto integrado", "16/09/23", "21:00", "bloco c 102");
-        this.aulasList.add(aulas);
+        // Método para buscar dados do Firestore e atualizar a lista
+        public void fetchDataAndUpdateList(AdapterAula adapter) {
+            aulasCollection.get().addOnSuccessListener(querySnapshot -> {
+                // Limpar a lista existente antes de adicionar novos dados
+                aulasList.clear();
 
-        aulas = new Aulas("Linguagem de programação", "20/09/23", "20:00", "bloco c 102");
-        this.aulasList.add(aulas);
+                // Iterar pelos documentos, supondo que seja uma lista de aulas
+                for (QueryDocumentSnapshot aulaSnapshot : querySnapshot) {
+                    // Extrair dados do documento
+                    String materia = aulaSnapshot.getString("materia");
+                    String data = aulaSnapshot.getString("data");
+                    String horas = aulaSnapshot.getString("horas");
+                    String sala = aulaSnapshot.getString("sala");
+                     idDocumento = aulaSnapshot.getId();
+                    Log.d(TAG, "Dados do Firestore: materia=" + materia + ", data=" + data + ", hora=" + horas + ", sala=" + sala);
 
+
+                    // Criar uma instância de Aulas e adicioná-la à lista
+                    Aulas aulas = new Aulas(materia, data, horas, sala,idDocumento);
+                    aulasList.add(aulas);
+
+                    Log.d(TAG, "Aula adicionada: " + aulas.getMateria());
+                }
+
+                // Imprimir a lista no log
+                for (Aulas aula : aulasList) {
+                    Log.d(TAG, "Aula na lista: " + aula.getMateria());
+                }
+
+
+
+                // Notificar que os dados foram atualizados (você pode usar um listener, EventBus, etc.)
+           adapter.notifyDataSetChanged(); // Certifique-se de notificar o adaptador quando os dados mudarem
+            }).addOnFailureListener(e -> {
+                // Lidar com erros de leitura
+                Log.w(TAG, "Erro ao ler documentos", e);
+            });
+        }
 
     }
 
-    private void Tela_aula(int position) {
+    private void Tela_aula(String idDocumento,int position) {
         Intent intent = new Intent(getActivity(), Tela_aula.class);
+        intent.putExtra("idDocumento", idDocumento);
         intent.putExtra("position", position);
         startActivity(intent);
     }

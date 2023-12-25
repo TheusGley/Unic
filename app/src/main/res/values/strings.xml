@@ -8,8 +8,8 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
+    <string name="menu_home">Aulas</string>
+    <string name="menu_gallery">Perfil</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="title_activity_tela_principal1">Tela_principal1</string>
 </resources>

@@ -1,18 +1,28 @@
 package com.example.unic.model;
-
 public class Aulas {
-    private String  materia, data, horario, sala;
 
-    public Aulas (){
+    private String materia;
+    private String data;
+    private String horas;
+    private String sala;
+    private String idDocumento ;
 
+    // Construtor vazio necessário para Firebase
+    public Aulas() {
+        // Nada precisa ser feito aqui, mas o construtor vazio é necessário
     }
-    public Aulas(String materia, String data, String horario, String sala) {
+
+    // Construtor para inicializar os dados da aula
+    public Aulas(String materia, String data, String horas, String sala, String idDocumento) {
         this.materia = materia;
         this.data = data;
-        this.horario = horario;
+        this.horas = horas;
         this.sala = sala;
+        this.idDocumento = idDocumento;
+
     }
-//para configurar os modelos das aulas
+
+    // Métodos getter e setter
     public String getMateria() {
         return materia;
     }
@@ -29,12 +39,12 @@ public class Aulas {
         this.data = data;
     }
 
-    public String getHorario() {
-        return horario;
+    public String getHoras() {
+        return horas;
     }
 
-    public void setHorario(String horario) {
-        this.horario = horario;
+    public void setHorario(String horas) {
+        this.horas = horas;
     }
 
     public String getSala() {
@@ -43,5 +53,12 @@ public class Aulas {
 
     public void setSala(String sala) {
         this.sala = sala;
+    }
+    public String getIdDocumento() {
+        return idDocumento;
+    }
+
+    public void setIdDocumento(String idDocumento) {
+        this.idDocumento = idDocumento;
     }
 }
