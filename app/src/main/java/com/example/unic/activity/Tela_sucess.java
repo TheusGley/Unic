@@ -3,8 +3,13 @@ package com.example.unic.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.Button;
@@ -25,7 +30,6 @@ public class Tela_sucess extends AppCompatActivity {
     private String idDocumento;
     private Button voltar ;
     private TextView text_success ;
-    private int hour,minute,ano,mes,dia ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,22 +71,26 @@ public class Tela_sucess extends AppCompatActivity {
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
 
-        text_success.setText("Presença confirmada ás " + hour +":"+ minute+ " na Data de "+ dia +"/"+ mes +"/" +ano );
+        text_success.setText("Presença confirmada ás " + hour +":"+ minute + " na Data de "+ dia +"/"+ mes +"/" +ano );
     }
 
 
-    private void confirmado(){
+    private void confirmado() {
         List<Aulas> aulasList = new ArrayList<>();
+        AdapterAula adapter = new AdapterAula(aulasList);
+        Context context = this;
 
-        AdapterAula adapter =  new AdapterAula(aulasList);
-
-
-        adapter.excluirAula( idDocumento , position);
         Intent intent = new Intent(this, Tela_principal.class);
-        intent.putExtra("idDocumento",idDocumento);
+        intent.putExtra("idDocumento", idDocumento);
         intent.putExtra("position", position);
 
-        startActivity(intent);
+        // Inicia a nova atividade após um pequeno atraso
+        new Handler().postDelayed(() -> {
+            startActivity(intent);
+
+            // Chama o método historico após a nova atividade ser iniciada
+            adapter.excluirAula(idDocumento, position, context);
+        }, 200); //
     }
 
 

@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation2"
+    android:id="@+id/mobile_navigation"
     app:startDestination="@+id/nav_home">
 
     <fragment
@@ -13,13 +13,23 @@
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="com.example.unic.ui.gallery.GalleryFragment"
+        android:name="com.example.unic.ui.slideshow.gallery.GalleryFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
         android:id="@+id/nav_slideshow"
         android:name="com.example.unic.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
+        android:label="Historico"
         tools:layout="@layout/fragment_slideshow" />
+    <fragment
+        android:id="@+id/nav_calendar"
+        android:name="com.example.unic.ui.calendar.Calendar_fragment"
+        android:label="Calendario Escolar"
+        tools:layout="@layout/fragment_calendar" />
+    <fragment
+        android:id="@+id/nav_addAulas"
+        android:name="com.example.unic.ui.addAulas.addAulas"
+        android:label="Adicionar aulas"
+        tools:layout="@layout/fragment_add_aulas" />
 </navigation>

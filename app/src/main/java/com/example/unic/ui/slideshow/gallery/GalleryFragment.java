@@ -1,4 +1,4 @@
-package com.example.unic.ui.gallery;
+package com.example.unic.ui.slideshow.gallery;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +16,6 @@ import com.example.unic.R;
 import com.example.unic.activity.MainActivity;
 import com.example.unic.databinding.FragmentGalleryBinding;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.ktx.Firebase;
 
 public class GalleryFragment extends Fragment {
 

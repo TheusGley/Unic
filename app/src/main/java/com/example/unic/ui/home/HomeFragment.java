@@ -62,6 +62,7 @@ public class HomeFragment extends Fragment {
         recyclerView = root.findViewById(R.id.recyclerView);
 
         AdapterAula adapter = new AdapterAula(aulasList);
+        adapter.notifyDataSetChanged();
 
         DataSource dataSource = new DataSource();
 
@@ -117,7 +118,7 @@ public class HomeFragment extends Fragment {
 
         return root;
     }
-    public class DataSource {
+    public static class DataSource {
 
         private static final String TAG = "DataSource";
 
@@ -127,41 +128,47 @@ public class HomeFragment extends Fragment {
         // Método para buscar dados do Firestore e atualizar a lista
         public void fetchDataAndUpdateList(AdapterAula adapter) {
             aulasCollection.get().addOnSuccessListener(querySnapshot -> {
-                // Limpar a lista existente antes de adicionar novos dados
-                aulasList.clear();
+                if (querySnapshot.isEmpty()) {
 
-                // Iterar pelos documentos, supondo que seja uma lista de aulas
-                for (QueryDocumentSnapshot aulaSnapshot : querySnapshot) {
-                    // Extrair dados do documento
-                    String materia = aulaSnapshot.getString("materia");
-                    String data = aulaSnapshot.getString("data");
-                    String horas = aulaSnapshot.getString("horas");
-                    String sala = aulaSnapshot.getString("sala");
-                     idDocumento = aulaSnapshot.getId();
-                    Log.d(TAG, "Dados do Firestore: materia=" + materia + ", data=" + data + ", hora=" + horas + ", sala=" + sala);
+                    Log.d("colecaoVazia", "Nao ha registros ");
+
+                } else {
+
+                    aulasList.clear();
+
+                    // Iterar pelos documentos, supondo que seja uma lista de aulas
+                    for (QueryDocumentSnapshot aulaSnapshot : querySnapshot) {
+                        // Extrair dados do documento
+                        String materia = aulaSnapshot.getString("materia");
+                        String data = aulaSnapshot.getString("data");
+                        String horas = aulaSnapshot.getString("horas");
+                        String sala = aulaSnapshot.getString("sala");
+                        String idDocumento = aulaSnapshot.getId();
+                        Log.d(TAG, "Dados do Firestore: materia=" + materia + ", data=" + data + ", hora=" + horas + ", sala=" + sala);
 
 
-                    // Criar uma instância de Aulas e adicioná-la à lista
-                    Aulas aulas = new Aulas(materia, data, horas, sala,idDocumento);
-                    aulasList.add(aulas);
+                        // Criar uma instância de Aulas e adicioná-la à lista
+                        Aulas aulas = new Aulas(materia, data, horas, sala, idDocumento);
+                        aulasList.add(aulas);
 
-                    Log.d(TAG, "Aula adicionada: " + aulas.getMateria());
+                        Log.d(TAG, "Aula adicionada: " + aulas.getMateria());
+                    }
+
+                    // Imprimir a lista no log
+                    for (Aulas aula : aulasList) {
+                        Log.d(TAG, "Aula na lista: " + aula.getMateria());
+                    }
+
+
+                    // Notificar que os dados foram atualizados (você pode usar um listener, EventBus, etc.)
+                    adapter.notifyDataSetChanged();
                 }
-
-                // Imprimir a lista no log
-                for (Aulas aula : aulasList) {
-                    Log.d(TAG, "Aula na lista: " + aula.getMateria());
-                }
-
-
-
-                // Notificar que os dados foram atualizados (você pode usar um listener, EventBus, etc.)
-           adapter.notifyDataSetChanged(); // Certifique-se de notificar o adaptador quando os dados mudarem
             }).addOnFailureListener(e -> {
                 // Lidar com erros de leitura
                 Log.w(TAG, "Erro ao ler documentos", e);
             });
         }
+
 
     }
 
