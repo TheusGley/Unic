@@ -1,4 +1,4 @@
-package com.example.unic.ui.slideshow.gallery;
+package com.example.unic.ui.gallery;
 
 import android.content.Intent;
 import android.os.Bundle;

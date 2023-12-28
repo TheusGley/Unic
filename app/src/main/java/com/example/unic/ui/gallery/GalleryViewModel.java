@@ -1,4 +1,4 @@
-package com.example.unic.ui.slideshow.gallery;
+package com.example.unic.ui.gallery;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
