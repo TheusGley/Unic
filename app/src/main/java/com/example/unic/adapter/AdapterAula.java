@@ -71,71 +71,8 @@ public class AdapterAula extends RecyclerView.Adapter<AdapterAula.MyViewHolder> 
         notifyDataSetChanged();
     }
 
-    public void excluirAula(String idDocumento, int position, Context context) {
-        listaAulas.remove(position);
-        deleteBd(idDocumento);
-        notifyDataSetChanged();
-
-        new Handler().postDelayed(() -> {
-            // Iniciar a atividade desejada (tela inicial)
-            Intent intent = new Intent(context, Tela_principal.class);
-            context.startActivity(intent);
-        }, 200); // Ajuste o valor do atraso conforme necessário
-    }
 
 
-    public void deleteBd(String idDocumento) {
-
-
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("Aulas").document(idDocumento).delete().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Log.d("db_delete", "Sucesso ao excluir os dados");
-                } else {
-                    Log.e("db_delete", "Erro ao excluir os dados", task.getException());
-                }
-            });
-
-
-
-    }
-
-    public void historico(String idDocumento, int position, Context context){
-
-        Log.d("db_delete", "Sucesso ao excluir os dados");
-
-        Aulas aulas = listaAulas.get(position);
-        String nomeAula = aulas.getMateria();
-        String  horario = aulas.getHoras();
-        String  sala = aulas.getSala();
-        String  data = aulas.getData();
-
-        Log.e("historico", "" +nomeAula + horario+sala+data);
-
-        FirebaseFirestore bd = FirebaseFirestore.getInstance();
-
-        Map <String,String> aulasMap = new HashMap<>() ;
-                aulasMap.put("materia",nomeAula);
-                aulasMap.put("data",data);
-                aulasMap.put("horas",horario);
-                aulasMap.put("sala",sala);
-
-
-       // Map<String,Object> historicoMap = new HashMap<>();
-         //       historicoMap.put("materia", nomeAula);
-           //     historicoMap.put("data", data);
-             //   historicoMap.put("horas", horario);
-               // historicoMap.put("sala", sala);
-
-        bd.collection("Historico").add(aulasMap).addOnSuccessListener(
-                documentReference -> {
-                    Log.d("historico", "Histórico adicionado com sucesso, ID do documento: " + documentReference.getId());
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("historico", "Erro ao adicionar o histórico", e);
-                });
-//        excluirAula(idDocumento,position ,context);
-    }
 
 
 

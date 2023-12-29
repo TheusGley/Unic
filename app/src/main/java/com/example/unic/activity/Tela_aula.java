@@ -40,7 +40,7 @@ public class Tela_aula extends AppCompatActivity  {
 
 
     private TextView tituloAula, dataAula, horarioAula, salaA;
-    private List<Aulas> listaAulas;
+    private String materia,horario,data,sala;
     private CheckBox checkBoxPosition;
     private int position;
     private String idDocumento;
@@ -90,10 +90,10 @@ public class Tela_aula extends AppCompatActivity  {
                 if (position >= 0 && position < listaAulas.size()) {
                     Aulas aula = listaAulas.get(position);
 
-                    String materia = aula.getMateria();
-                    String data = aula.getData();
-                    String horario = aula.getHoras();
-                    String sala = aula.getSala();
+                     materia = aula.getMateria();
+                     data = aula.getData();
+                     horario = aula.getHoras();
+                     sala = aula.getSala();
 
                     // Use os valores obtidos conforme necessário
                     tituloAula.setText(materia);
@@ -208,7 +208,14 @@ public class Tela_aula extends AppCompatActivity  {
 
 
                 }
-                Tela_sucess(idDocumento,position);
+
+                List<Aulas> listaAulas = HomeFragment.aulasList;
+
+                if (position >= 0 && position < listaAulas.size()) {
+
+
+                    Tela_sucess(position);
+                }
 
 
             }
@@ -218,14 +225,15 @@ public class Tela_aula extends AppCompatActivity  {
 
     }
 
-    private void Tela_sucess(String idDocumento,int position) {
+    private void Tela_sucess( int position) {
             Intent intent = new Intent(this, Tela_sucess.class);
             intent.putExtra("position", position);
-            intent.putExtra("idDocumento", idDocumento);
 
             startActivity(intent);
-        }
+            finish();
+
     }
+}
 
 
 
