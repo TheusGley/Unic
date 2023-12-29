@@ -38,7 +38,7 @@ public class SlideshowFragment extends Fragment {
 
 
     private RecyclerView recyclerView;
-    public static List<Aulas> aulasList = new ArrayList<>();
+    public static List<Aulas> historicoList = new ArrayList<>();
 
     private FragmentSlideshowBinding binding;
     private TextView textUsu , textEMAIL;
@@ -56,13 +56,12 @@ public class SlideshowFragment extends Fragment {
 
 
 
-        recyclerView = root.findViewById(R.id.RecyclerView);
+        recyclerView = root.findViewById(R.id.recyclerView);
 
-        AdapterAula adapter = new AdapterAula(aulasList);
+        AdapterAula adapter = new AdapterAula(historicoList);
         adapter.notifyDataSetChanged();
 
-        com.example.unic.ui.home.HomeFragment.DataSource dataSource = new com.example.unic.ui.home.HomeFragment.DataSource();
-
+        DataSource dataSource =  new DataSource();
         // Chamar o método para buscar dados e atualizar a lista
         dataSource.fetchDataAndUpdateList(adapter);
 
@@ -80,7 +79,7 @@ public class SlideshowFragment extends Fragment {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Tela_aula(idDocumento,position);
+
 
                                     }
                                 }, 1000);
@@ -134,7 +133,7 @@ public class SlideshowFragment extends Fragment {
 
                 } else {
 
-                    aulasList.clear();
+                    historicoList.clear();
 
                     // Iterar pelos documentos, supondo que seja uma lista de aulas
                     for (QueryDocumentSnapshot aulaSnapshot : querySnapshot) {
@@ -149,13 +148,13 @@ public class SlideshowFragment extends Fragment {
 
                         // Criar uma instância de Aulas e adicioná-la à lista
                         Aulas aulas = new Aulas(materia, data, horas, sala, idDocumento);
-                        aulasList.add(aulas);
+                        historicoList.add(aulas);
 
                         Log.d(TAG, "Aula adicionada: " + aulas.getMateria());
                     }
 
                     // Imprimir a lista no log
-                    for (Aulas aula : aulasList) {
+                    for (Aulas aula : historicoList) {
                         Log.d(TAG, "Aula na lista: " + aula.getMateria());
                     }
 
@@ -170,13 +169,6 @@ public class SlideshowFragment extends Fragment {
         }
 
 
-    }
-
-    private void Tela_aula(String idDocumento,int position) {
-        Intent intent = new Intent(getActivity(), Tela_aula.class);
-        intent.putExtra("idDocumento", idDocumento);
-        intent.putExtra("position", position);
-        startActivity(intent);
     }
 
 
